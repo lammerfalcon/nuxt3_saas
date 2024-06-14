@@ -10,7 +10,8 @@ export default defineNuxtConfig({
     '@nuxthq/studio',
     '@vueuse/nuxt',
     'nuxt-og-image',
-    "@nuxthub/core"
+    '@nuxthub/core',
+    'nuxt-auth-utils'
   ],
   hooks: {
     // Define `@nuxt/ui` components as global to use them in `.md` (feel free to add those you need)
@@ -19,6 +20,9 @@ export default defineNuxtConfig({
 
       globals.forEach(c => c.global = true)
     }
+  },
+  hub: {
+    database: true
   },
   ui: {
     icons: ['heroicons', 'simple-icons']
