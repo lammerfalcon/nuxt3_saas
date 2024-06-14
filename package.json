@@ -7,7 +7,7 @@
     "dev": "nuxt dev",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
-    "postinstall": "nuxt prepare",
+    "postinstall": "nuxt prepare && patch-package",
     "lint": "eslint .",
     "typecheck": "nuxt typecheck"
   },
@@ -25,7 +25,8 @@
     "date-fns": "^3.6.0",
     "nuxt": "^3.12.1",
     "nuxt-og-image": "^2.2.4",
-    "v-calendar": "^3.1.2"
+    "v-calendar": "^3.1.2",
+    "patch-package": "^8.0.0"
   },
   "devDependencies": {
     "@nuxt/eslint": "^0.3.13",
