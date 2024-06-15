@@ -10,10 +10,12 @@ export default oauth.githubEventHandler({
         githubId: user.id
       }
     })
+    const usersList = await useDrizzle().select().from(users).all()
+    console.log(usersList)
     await useDrizzle().insert(users).values({
       email: user.email
     }).run()
-    const users = await useDrizzle().select().from(users).all()
+
     return sendRedirect(event, '/')
   },
   // Optional, will return a json error and 401 status code by default
