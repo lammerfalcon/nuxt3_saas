@@ -15,6 +15,20 @@
       "when": 1718440828668,
       "tag": "0001_slim_goblin_queen",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1718450502588,
+      "tag": "0002_normal_deathbird",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "6",
+      "when": 1718451043761,
+      "tag": "0003_unusual_yellowjacket",
+      "breakpoints": true
     }
   ]
 }

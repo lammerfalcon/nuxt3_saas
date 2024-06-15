@@ -12,8 +12,12 @@ export default oauth.githubEventHandler({
     })
     const usersList = await useDrizzle().select().from(users).all()
     console.log(usersList)
+    console.log(user)
     await useDrizzle().insert(users).values({
-      email: user.email
+      email: user.email,
+      name: user.name,
+      avatar: user.avatar_url,
+      createdAt: new Date()
     }).run()
 
     return sendRedirect(event, '/')
