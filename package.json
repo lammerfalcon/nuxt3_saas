@@ -9,7 +9,9 @@
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare && patch-package",
     "lint": "eslint .",
-    "typecheck": "nuxt typecheck"
+    "typecheck": "nuxt typecheck",
+    "db:generate": "drizzle-kit generate"
+
   },
   "dependencies": {
     "@iconify-json/heroicons": "^1.1.21",
@@ -24,14 +26,15 @@
     "@vueuse/nuxt": "^10.11.0",
     "date-fns": "^3.6.0",
     "nuxt": "^3.12.1",
+    "nuxt-auth-utils": "latest",
     "nuxt-og-image": "^2.2.4",
-    "v-calendar": "^3.1.2",
     "patch-package": "^8.0.0",
-    "nuxt-auth-utils": "latest"
+    "v-calendar": "^3.1.2"
   },
   "devDependencies": {
     "@nuxt/eslint": "^0.3.13",
     "@nuxthq/studio": "^2.0.0",
+    "drizzle-kit": "^0.22.7",
     "eslint": "^9.4.0",
     "vue-tsc": "^2.0.21",
     "wrangler": "^3.60.3"
