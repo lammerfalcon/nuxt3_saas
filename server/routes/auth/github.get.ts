@@ -18,9 +18,17 @@ export default oauth.githubEventHandler({
       name: user.name,
       avatar: user.avatar_url,
       createdAt: new Date()
+    }).onConflictDoUpdate({
+      target: users.id,
+      set: {
+        email: user.email,
+        name: user.name,
+        avatar: user.avatar_url,
+        createdAt: new Date()
+      }
     }).run()
 
-    return sendRedirect(event, '/')
+    return sendRedirect(event, '/app')
   },
   // Optional, will return a json error and 401 status code by default
   onError(event, error) {
