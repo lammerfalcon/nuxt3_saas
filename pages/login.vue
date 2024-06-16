@@ -31,7 +31,7 @@ const providers = [{
   icon: 'i-simple-icons-github',
   color: 'white' as const,
   click: async () => {
-    await navigateTo('/auth/github', { open: { target: '_blank' } })
+    await navigateTo('/auth/github', { open: { target: '_self' } })
     console.log('Redirect to GitHub')
   }
 },
