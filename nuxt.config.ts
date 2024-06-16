@@ -21,6 +21,14 @@ export default defineNuxtConfig({
       globals.forEach(c => c.global = true)
     }
   },
+  runtimeConfig: {
+    oauth: {
+      google: {
+        clientId: process.env.NUXT_OAUTH_GOOGLE_CLIENT_ID,
+        clientSecret: process.env.NUXT_OAUTH_GOOGLE_CLIENT_SECRET
+      }
+    }
+  },
   hub: {
     database: true,
     remote: true
