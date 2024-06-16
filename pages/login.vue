@@ -31,7 +31,7 @@ const providers = [{
   icon: 'i-simple-icons-github',
   color: 'white' as const,
   click: async () => {
-    navigateTo('/auth/github', { open: { target: '_self' } })
+    await navigateTo('/auth/github', { open: { target: '_blank' } })
     console.log('Redirect to GitHub')
   }
 },
@@ -40,7 +40,7 @@ const providers = [{
   icon: 'i-simple-icons-google',
   color: 'white' as const,
   click: async () => {
-    navigateTo('/auth/google', { open: { target: '_self' } })
+    await navigateTo('/auth/google', { open: { target: '_self' } })
     console.log('Redirect to Google')
   }
 
