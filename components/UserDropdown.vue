@@ -3,6 +3,7 @@ const { isHelpSlideoverOpen } = useDashboard()
 const { isDashboardSearchModalOpen } = useUIState()
 const { metaSymbol } = useShortcuts()
 
+const { user } = useUserSession()
 const items = computed(() => [
   [{
     slot: 'account',
@@ -59,16 +60,15 @@ const items = computed(() => [
         color="gray"
         variant="ghost"
         class="w-full"
-        label="Benjamin"
+        :label="user.name"
         :class="[open && 'bg-gray-50 dark:bg-gray-800']"
       >
         <template #leading>
           <UAvatar
-            src="https://avatars.githubusercontent.com/u/739984?v=4"
+            :src="user.avatar"
             size="2xs"
           />
         </template>
-
         <template #trailing>
           <UIcon
             name="i-heroicons-ellipsis-vertical"
@@ -84,7 +84,7 @@ const items = computed(() => [
           Signed in as
         </p>
         <p class="truncate font-medium text-gray-900 dark:text-white">
-          ben@nuxtlabs.com
+          {{ user.email }}
         </p>
       </div>
     </template>

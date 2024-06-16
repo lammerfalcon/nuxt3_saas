@@ -31,9 +31,19 @@ const providers = [{
   icon: 'i-simple-icons-github',
   color: 'white' as const,
   click: async () => {
-    await $fetch('/api/auth/github')
+    navigateTo('/auth/github', { open: { target: '_self' } })
     console.log('Redirect to GitHub')
   }
+},
+{
+  label: 'Continue with Google',
+  icon: 'i-simple-icons-google',
+  color: 'white' as const,
+  click: async () => {
+    navigateTo('/auth/google', { open: { target: '_self' } })
+    console.log('Redirect to Google')
+  }
+
 }]
 
 function onSubmit(data: any) {
@@ -45,7 +55,6 @@ function onSubmit(data: any) {
 <!-- eslint-disable vue/singleline-html-element-content-newline -->
 <template>
   <UCard class="max-w-sm w-full bg-white/75 dark:bg-white/5 backdrop-blur">
-    <a href="/auth/github">Login with GitHub</a>
 
     <UAuthForm
       :fields="fields"

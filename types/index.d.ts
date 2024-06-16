@@ -1,4 +1,5 @@
 import type { ParsedContent } from '@nuxt/content/dist/runtime/types'
+import type { Avatar } from '#ui/types'
 
 export interface BlogPost extends ParsedContent {
   title: string
@@ -12,7 +13,6 @@ export interface BlogPost extends ParsedContent {
     avatar?: Avatar
   } & Link)[]
 }
-import type { Avatar } from '#ui/types'
 
 export type UserStatus = 'subscribed' | 'unsubscribed' | 'bounced'
 

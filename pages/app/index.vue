@@ -3,7 +3,6 @@ import { sub } from 'date-fns'
 import type { Period, Range } from '~/types'
 
 const { isNotificationsSlideoverOpen } = useDashboard()
-
 const items = [[{
   label: 'New mail',
   icon: 'i-heroicons-paper-airplane',

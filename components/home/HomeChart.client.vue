@@ -34,14 +34,14 @@ const { data } = await useAsyncData<DataRecord[]>(async () => {
   const min = 1000
   const max = 10000
 
-  return dates.map(date => ({ date, amount: Math.floor(Math.random() * (max - min + 1)) + min }))
+  return dates.map(date => ({ date, amount: Math.floor(Math.random() * (max - min + 1)) + min, amount2: Math.floor(Math.random() * (max - min + 1)) + min }))
 }, {
   watch: [() => props.period, () => props.range],
   default: () => []
 })
 
 const x = (_: DataRecord, i: number) => i
-const y = (d: DataRecord) => d.amount
+const y = [(d: DataRecord) => d.amount, d => d.amount2]
 
 const total = computed(() => data.value.reduce((acc: number, { amount }) => acc + amount, 0))
 

@@ -1,9 +1,7 @@
 import { users } from '~/server/database/schema'
 
-export default oauth.githubEventHandler({
-  config: {
-    emailRequired: true
-  },
+export default oauth.googleEventHandler({
+
   async onSuccess(event, { user, tokens }) {
     const db = useDrizzle()
 
