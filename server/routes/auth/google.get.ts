@@ -4,13 +4,13 @@ export default oauth.googleEventHandler({
 
   async onSuccess(event, { user, tokens }) {
     const db = useDrizzle()
-
+    console.log(user)
     // Upsert (insert or update on conflict) user data
     const [upsertedUser] = await db.insert(users)
       .values({
         email: user.email,
         name: user.name,
-        avatar: user.avatar_url,
+        avatar: user.picture,
         createdAt: new Date(),
         updatedAt: new Date()
       })
@@ -18,7 +18,7 @@ export default oauth.googleEventHandler({
         target: users.email,
         set: {
           name: user.name,
-          avatar: user.avatar_url,
+          avatar: user.picture,
           updatedAt: new Date()
         }
       })

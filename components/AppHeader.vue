@@ -31,14 +31,6 @@ const links = [{
         color="gray"
         to="/login"
       />
-      <UButton
-        label="Sign up"
-        icon="i-heroicons-arrow-right-20-solid"
-        trailing
-        color="black"
-        to="/signup"
-        class="hidden lg:flex"
-      />
     </template>
 
     <template #panel>

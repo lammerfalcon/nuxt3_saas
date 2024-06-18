@@ -49,6 +49,8 @@ const providers = [{
 function onSubmit(data: any) {
   console.log('Submitted', data)
 }
+const data = await useFetch('/api/users')
+console.log(data)
 </script>
 
 <!-- eslint-disable vue/multiline-html-element-content-newline -->
@@ -57,10 +59,8 @@ function onSubmit(data: any) {
   <UCard class="max-w-sm w-full bg-white/75 dark:bg-white/5 backdrop-blur">
 
     <UAuthForm
-      :fields="fields"
-      :validate="validate"
       :providers="providers"
-      title="Welcome back"
+      title="Welcome!"
       align="top"
       icon="i-heroicons-lock-closed"
       :ui="{ base: 'text-center', footer: 'text-center' }"
@@ -68,10 +68,8 @@ function onSubmit(data: any) {
       @submit="onSubmit"
     >
       <template #description>
-        Don't have an account? <NuxtLink
-          to="/signup"
-          class="text-primary font-medium"
-        >Sign up</NuxtLink>.
+        <!--        sign with providers -->
+        Sign in with our providers
       </template>
 
       <template #password-hint>

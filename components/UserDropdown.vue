@@ -3,7 +3,7 @@ const { isHelpSlideoverOpen } = useDashboard()
 const { isDashboardSearchModalOpen } = useUIState()
 const { metaSymbol } = useShortcuts()
 
-const { user } = useUserSession()
+const { user, clear } = useUserSession()
 const items = computed(() => [
   [{
     slot: 'account',
@@ -42,7 +42,11 @@ const items = computed(() => [
     target: '_blank'
   }], [{
     label: 'Sign out',
-    icon: 'i-heroicons-arrow-left-on-rectangle'
+    icon: 'i-heroicons-arrow-left-on-rectangle',
+    click: async () => {
+      await clear()
+      return navigateTo('/login')
+    }
   }]
 ])
 </script>
@@ -77,7 +81,6 @@ const items = computed(() => [
         </template>
       </UButton>
     </template>
-
     <template #account>
       <div class="text-left">
         <p>
