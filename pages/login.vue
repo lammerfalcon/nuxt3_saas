@@ -49,8 +49,6 @@ const providers = [{
 function onSubmit(data: any) {
   console.log('Submitted', data)
 }
-const data = await useFetch('/api/users')
-console.log(data)
 </script>
 
 <!-- eslint-disable vue/multiline-html-element-content-newline -->

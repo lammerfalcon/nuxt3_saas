@@ -1,6 +1,8 @@
 export default defineNuxtRouteMiddleware((to) => {
-  // Set the layout on the route you are navigating _to_
   const { loggedIn } = useUserSession()
+  if (loggedIn.value && to.path.startsWith('/login')) {
+    return navigateTo('/app')
+  }
   if (to.path.startsWith('/app')) {
     setPageLayout('app')
     if (!loggedIn.value) {
