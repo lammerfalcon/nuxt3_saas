@@ -15,6 +15,49 @@ const items = [[{
 
 const range = ref<Range>({ start: sub(new Date(), { days: 14 }), end: new Date() })
 const period = ref<Period>('daily')
+// Wallet address
+const walletAddress = 'TK5mpbH9VqskkrhrDYzSbqHakMCHsQSJR1'
+
+// Function to get transactions from TRON Grid
+async function getTronWalletTransactions(walletAddress) {
+  const url = `https://api.trongrid.io/v1/accounts/${walletAddress}/transactions/trc20?limit=200`
+  try {
+    const response = await fetch(url)
+    if (!response.ok) {
+      throw new Error('Network response was not ok ' + response.statusText)
+    }
+    const data = await response.json()
+    return data.data
+  } catch (error) {
+    console.error('Error fetching transactions:', error)
+    return null
+  }
+}
+
+// Function to filter incoming USDT transactions
+function filterIncomingUSDTTransactions(transactions) {
+  return transactions.filter((transaction) => {
+    return transaction.token_info.symbol === 'USDT' && transaction.from === walletAddress
+  })
+}
+
+// Main function to fetch and filter transactions
+async function main() {
+  let total = 0
+  const transactions = await getTronWalletTransactions(walletAddress)
+  if (transactions) {
+    const incomingUSDTTransactions = filterIncomingUSDTTransactions(transactions)
+    incomingUSDTTransactions.forEach((transaction) => {
+      total += transaction.value / 1e6
+      console.log(`Date: ${new Date(transaction.block_timestamp).toISOString()}, Amount: ${transaction.value / 1e6} USDT`)
+    })
+  } else {
+    console.log('No transactions found or error in fetching data.')
+  }
+  console.log(total, 'total')
+}
+
+main()
 </script>
 
 <template>

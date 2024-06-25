@@ -7,3 +7,9 @@ export const users = sqliteTable('users', {
   avatar: text('avatar').notNull(),
   createdAt: integer('created_at', { mode: 'timestamp' }).notNull()
 })
+
+export const orders = sqliteTable('orders', {
+  id: integer('id').primaryKey({ autoIncrement: true }),
+  amount: integer('amount').notNull(),
+  createdAt: integer('created_at', { mode: 'timestamp' }).notNull()
+})
