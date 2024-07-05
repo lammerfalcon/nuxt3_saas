@@ -2,6 +2,12 @@
   <u-button @click="createPayment()">
     proceed
   </u-button>
+  <u-button @click="createPayment()">
+    proceed
+  </u-button>
+  <u-button @click="createPayment()">
+    proceed
+  </u-button>
 </template>
 
 <script setup>
