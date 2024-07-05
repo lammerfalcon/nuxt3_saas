@@ -5,64 +5,29 @@
     {
       "idx": 0,
       "version": "6",
-      "when": 1718440633247,
-      "tag": "0000_legal_red_hulk",
+      "when": 1719304888105,
+      "tag": "0000_careless_jane_foster",
       "breakpoints": true
     },
     {
       "idx": 1,
       "version": "6",
-      "when": 1718440828668,
-      "tag": "0001_slim_goblin_queen",
+      "when": 1719304923216,
+      "tag": "0001_ancient_tigra",
       "breakpoints": true
     },
     {
       "idx": 2,
       "version": "6",
-      "when": 1718450502588,
-      "tag": "0002_normal_deathbird",
+      "when": 1719603007435,
+      "tag": "0002_freezing_dormammu",
       "breakpoints": true
     },
     {
       "idx": 3,
       "version": "6",
-      "when": 1718451043761,
-      "tag": "0003_unusual_yellowjacket",
-      "breakpoints": true
-    },
-    {
-      "idx": 4,
-      "version": "6",
-      "when": 1719299097758,
-      "tag": "0004_jittery_living_lightning",
-      "breakpoints": true
-    },
-    {
-      "idx": 5,
-      "version": "6",
-      "when": 1719299234947,
-      "tag": "0005_curvy_venom",
-      "breakpoints": true
-    },
-    {
-      "idx": 6,
-      "version": "6",
-      "when": 1719299830162,
-      "tag": "0006_dark_gorilla_man",
-      "breakpoints": true
-    },
-    {
-      "idx": 7,
-      "version": "6",
-      "when": 1719300354356,
-      "tag": "0007_spooky_lady_mastermind",
-      "breakpoints": true
-    },
-    {
-      "idx": 8,
-      "version": "6",
-      "when": 1719300389916,
-      "tag": "0008_natural_dreaming_celestial",
+      "when": 1719605092584,
+      "tag": "0003_loving_human_fly",
       "breakpoints": true
     }
   ]

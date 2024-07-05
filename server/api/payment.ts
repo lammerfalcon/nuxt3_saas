@@ -1,19 +1,20 @@
-import { orders } from '~/server/database/schema'
+import { randomUUID } from 'node:crypto'
+import { defineEventHandler } from 'h3'
+import { orders, payments } from '~/server/database/schema'
+import { startPaymentStatusCheck } from '~/server/utils/checkPaymentStatus'
 
 export default defineEventHandler(async (event) => {
   const db = useDrizzle()
-  await db.insert(orders).values({
+  const newOrder = await db.insert(orders).values({
+    user_id: 1,
     amount: 1000,
     createdAt: new Date()
   }).returning()
 
   async function createPayment() {
     const shopId = '408678'
-    // const shopId = '395948'
-    // const secretKey = 'live_acjDFIOoZkk3ZI-xm9FNSYUYMFDW3JxlMyRMQYxFPLU'
     const secretKey = 'test_XHJ_oZMbjJfqUM_lWBEmPKb8JCcPepYUrQ4NMjQQbGM'
-    // const idempotenceKey = '1212315756187561926598'
-    const idempotenceKey = '1212315756187561926598'
+    const idempotenceKey = randomUUID()
 
     const url = 'https://api.yookassa.ru/v3/payments'
 
@@ -26,11 +27,7 @@ export default defineEventHandler(async (event) => {
         type: 'redirect',
         return_url: 'http://localhost:3000/'
       },
-      capture: true,
-      description: 'Order No. 37',
-      metadata: {
-        order_id: '37'
-      }
+      capture: true
     }
 
     const response = await fetch(url, {
@@ -48,12 +45,22 @@ export default defineEventHandler(async (event) => {
     }
 
     const payment = await response.json()
-    console.log('Payment created:', payment)
+    await db.insert(payments).values({
+      order_id: 2323,
+      payment_id: payment.id,
+      status: payment.status,
+      createdAt: new Date()
+    }).returning()
 
     return payment
   }
-  const response = await createPayment()
+
+  const paymentResponse = await createPayment()
+
+  // Запуск проверки статуса асинхронно
+  startPaymentStatusCheck(paymentResponse.id)
+
   return {
-    data: response
+    data: paymentResponse
   }
 })

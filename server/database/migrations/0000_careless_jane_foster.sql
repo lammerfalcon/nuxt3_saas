@@ -1,8 +1,13 @@
+CREATE TABLE `orders` (
+	`id` integer PRIMARY KEY AUTOINCREMENT NOT NULL,
+	`amount` integer NOT NULL,
+	`created_at` integer NOT NULL
+);
+--> statement-breakpoint
 CREATE TABLE `users` (
 	`id` integer PRIMARY KEY AUTOINCREMENT NOT NULL,
 	`name` text NOT NULL,
 	`email` text NOT NULL,
-	`password` text NOT NULL,
 	`avatar` text NOT NULL,
 	`created_at` integer NOT NULL
 );

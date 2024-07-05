@@ -1,5 +1,5 @@
 <template>
-  <u-button @click="createPayment">
+  <u-button @click="createPayment()">
     proceed
   </u-button>
 </template>

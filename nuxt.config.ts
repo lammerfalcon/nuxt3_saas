@@ -50,6 +50,11 @@ export default defineNuxtConfig({
   typescript: {
     strict: false
   },
+  nitro: {
+    experimental: {
+      openAPI: true
+    }
+  },
   eslint: {
     config: {
       stylistic: {
