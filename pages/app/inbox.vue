@@ -1,19 +1,19 @@
-<template>
-  <u-button @click="createPayment()">
-    proceed
-  </u-button>
-  <u-button @click="createPayment()">
-    proceed
-  </u-button>
-  <u-button @click="createPayment()">
-    proceed
-  </u-button>
-</template>
+<script setup lang="ts">
+const upload = useUpload('/api/avatars/upload', {multiple: false})
 
-<script setup>
-async function createPayment() {
-  const { data } = await useFetch('/api/payment')
-  console.log(data.value.data.confirmation.confirmation_url)
-  navigateTo(data.value.data.confirmation.confirmation_url, { external: true })
+async function onFileSelect({ target }: Event) {
+  const uploadedFiles = await upload(target as HTMLInputElement)
+
+  // file uploaded successfully
 }
 </script>
+
+<template>
+  <input
+    accept="jpeg, png"
+    type="file"
+    name="file"
+    multiple
+    @change="onFileSelect"
+  >
+</template>
