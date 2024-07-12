@@ -37,6 +37,11 @@ export default defineNuxtConfig({
     database: true,
     blob: true
   },
+  $development: {
+    hub: {
+      remote: true
+    }
+  },
 
   ui: {
     icons: ['heroicons', 'simple-icons']
