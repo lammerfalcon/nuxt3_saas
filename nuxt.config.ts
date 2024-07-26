@@ -79,7 +79,6 @@ export default defineNuxtConfig({
         braceStyle: '1tbs'
       }
     }
-  },
+  }
 
-  compatibilityDate: '2024-07-12'
 })

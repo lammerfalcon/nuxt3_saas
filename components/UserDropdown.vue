@@ -69,7 +69,7 @@ const items = computed(() => [
       >
         <template #leading>
           <UAvatar
-            :src="user.avatar"
+            :src="`/images/${user.avatar}`"
             size="2xs"
           />
         </template>

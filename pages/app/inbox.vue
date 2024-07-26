@@ -1,5 +1,6 @@
 <script setup lang="ts">
-const upload = useUpload('/api/avatars/upload', {multiple: false})
+const upload = useUpload('/api/avatars/upload', { multiple: false })
+const { loggedIn, user, session, clear } = useUserSession()
 
 async function onFileSelect({ target }: Event) {
   const uploadedFiles = await upload(target as HTMLInputElement)
@@ -9,6 +10,11 @@ async function onFileSelect({ target }: Event) {
 </script>
 
 <template>
+  <img
+    :src="`/images/${user.avatar}`"
+    alt=""
+  >
+
   <input
     accept="jpeg, png"
     type="file"

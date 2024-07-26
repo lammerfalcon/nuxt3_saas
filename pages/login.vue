@@ -49,13 +49,15 @@ const providers = [{
 function onSubmit(data: any) {
   console.log('Submitted', data)
 }
+
+const { data } = useFetch('/api/files')
 </script>
 
 <!-- eslint-disable vue/multiline-html-element-content-newline -->
 <!-- eslint-disable vue/singleline-html-element-content-newline -->
 <template>
   <UCard class="max-w-sm w-full bg-white/75 dark:bg-white/5 backdrop-blur">
-    <UIcon />
+
     <UAuthForm
       :providers="providers"
       title="Welcome!"

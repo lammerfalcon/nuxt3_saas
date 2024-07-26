@@ -1,15 +1,25 @@
-export default eventHandler(async (event) => {
-  await requireUserSession(event)
+import {users} from "~/server/database/schema";
 
-  // https://hub.nuxt.com/docs/storage/blob#handleupload
-  return hubBlob().handleUpload(event, {
+export default eventHandler(async (event) => {
+  const session = await requireUserSession(event)
+  const db = useDrizzle()
+
+  const avatarData = await hubBlob().handleUpload(event, {
     multiple: false,
     put: {
-      addRandomSuffix: true
+      addRandomSuffix: true,
+      prefix: 'avatars/'
     },
     ensure: {
       maxSize: '8MB',
       types: ['image/jpeg', 'image/png', 'image/gif', 'image/heic', 'image/webp']
     }
   })
+  const updatedUser = await db.update(users).set({avatar: avatarData[0].pathname}).where(eq(users.email, session.user.email)).returning()
+  await replaceUserSession(event, {
+    user: updatedUser[0]
+  })
+
+
+  return avatarData
 })
