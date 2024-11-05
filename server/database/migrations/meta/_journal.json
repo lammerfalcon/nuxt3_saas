@@ -5,29 +5,15 @@
     {
       "idx": 0,
       "version": "6",
-      "when": 1719304888105,
-      "tag": "0000_careless_jane_foster",
+      "when": 1730834765212,
+      "tag": "0000_tranquil_imperial_guard",
       "breakpoints": true
     },
     {
       "idx": 1,
       "version": "6",
-      "when": 1719304923216,
-      "tag": "0001_ancient_tigra",
-      "breakpoints": true
-    },
-    {
-      "idx": 2,
-      "version": "6",
-      "when": 1719603007435,
-      "tag": "0002_freezing_dormammu",
-      "breakpoints": true
-    },
-    {
-      "idx": 3,
-      "version": "6",
-      "when": 1719605092584,
-      "tag": "0003_loving_human_fly",
+      "when": 1730836192238,
+      "tag": "0001_lovely_pride",
       "breakpoints": true
     }
   ]

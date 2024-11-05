@@ -1,6 +1,6 @@
-import { users } from '~/server/database/schema'
+import { users } from '@@/server/database/schema'
 
-export default oauth.googleEventHandler({
+export default defineOAuthGoogleEventHandler({
 
   async onSuccess(event, { user, tokens }) {
     const db = useDrizzle()
@@ -18,8 +18,7 @@ export default oauth.googleEventHandler({
         target: users.email,
         set: {
           name: user.name,
-          avatar: user.picture,
-          updatedAt: new Date()
+          avatar: user.picture
         }
       })
       .returning()

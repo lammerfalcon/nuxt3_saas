@@ -1,4 +1,4 @@
-import {users} from "~/server/database/schema";
+import { users } from '@@/server/database/schema'
 
 export default eventHandler(async (event) => {
   const session = await requireUserSession(event)
@@ -15,11 +15,11 @@ export default eventHandler(async (event) => {
       types: ['image/jpeg', 'image/png', 'image/gif', 'image/heic', 'image/webp']
     }
   })
-  const updatedUser = await db.update(users).set({avatar: avatarData[0].pathname}).where(eq(users.email, session.user.email)).returning()
+  const [updatedUser] = await db.update(users).set({ avatar: avatarData[0].pathname }).where(eq(users.email, session.user.email)).returning()
+  console.log('updatedUser', updatedUser)
   await replaceUserSession(event, {
-    user: updatedUser[0]
+    user: updatedUser
   })
-
 
   return avatarData
 })

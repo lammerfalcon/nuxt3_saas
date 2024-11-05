@@ -8,17 +8,23 @@ export const users = sqliteTable('users', {
   createdAt: integer('created_at', { mode: 'timestamp' }).notNull()
 })
 
-export const orders = sqliteTable('orders', {
+export const budgets = sqliteTable('budgets', {
   id: integer('id').primaryKey({ autoIncrement: true }),
-  amount: integer('amount').notNull(),
-  user_id: integer('user_id').notNull(),
+  name: text('name').notNull(),
   createdAt: integer('created_at', { mode: 'timestamp' }).notNull()
 })
 
-export const payments = sqliteTable('payments', {
+export const userBudgets = sqliteTable('user_budgets', {
   id: integer('id').primaryKey({ autoIncrement: true }),
-  order_id: integer('order_id').notNull().references(() => orders.id),
-  payment_id: text('payment_id').notNull(),
-  status: text('status').notNull(),
-  createdAt: integer('created_at', { mode: 'timestamp' }).notNull()
+  userId: integer('user_id').notNull().references(() => users.id),
+  budgetId: integer('budget_id').notNull().references(() => budgets.id)
+})
+
+export const expenses = sqliteTable('expenses', {
+  id: integer('id').primaryKey({ autoIncrement: true }),
+  userId: integer('user_id').notNull().references(() => users.id),
+  budgetId: integer('budget_id').notNull().references(() => budgets.id),
+  amount: integer('amount').notNull(),
+  createdAt: integer('created_at', { mode: 'timestamp' }).notNull(),
+  description: text('description')
 })
