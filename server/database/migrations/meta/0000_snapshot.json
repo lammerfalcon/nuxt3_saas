@@ -1,33 +1,9 @@
 {
   "version": "6",
   "dialect": "sqlite",
-  "id": "612f79fb-519f-4a64-b170-498b0ec3337e",
+  "id": "98de0665-26f3-40c4-9ec5-959056099909",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
-    "budgets": {
-      "name": "budgets",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "integer",
-          "primaryKey": true,
-          "notNull": true,
-          "autoincrement": true
-        },
-        "name": {
-          "name": "name",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {},
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {},
-      "checkConstraints": {}
-    },
     "expenses": {
       "name": "expenses",
       "columns": {
@@ -45,16 +21,9 @@
           "notNull": true,
           "autoincrement": false
         },
-        "budget_id": {
-          "name": "budget_id",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
         "amount": {
           "name": "amount",
-          "type": "integer",
+          "type": "real",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
@@ -82,77 +51,6 @@
           "tableTo": "users",
           "columnsFrom": [
             "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        },
-        "expenses_budget_id_budgets_id_fk": {
-          "name": "expenses_budget_id_budgets_id_fk",
-          "tableFrom": "expenses",
-          "tableTo": "budgets",
-          "columnsFrom": [
-            "budget_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {},
-      "checkConstraints": {}
-    },
-    "user_budgets": {
-      "name": "user_budgets",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "integer",
-          "primaryKey": true,
-          "notNull": true,
-          "autoincrement": true
-        },
-        "user_id": {
-          "name": "user_id",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "budget_id": {
-          "name": "budget_id",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {
-        "user_budgets_user_id_users_id_fk": {
-          "name": "user_budgets_user_id_users_id_fk",
-          "tableFrom": "user_budgets",
-          "tableTo": "users",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        },
-        "user_budgets_budget_id_budgets_id_fk": {
-          "name": "user_budgets_budget_id_budgets_id_fk",
-          "tableFrom": "user_budgets",
-          "tableTo": "budgets",
-          "columnsFrom": [
-            "budget_id"
           ],
           "columnsTo": [
             "id"

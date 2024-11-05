@@ -1,1 +1,0 @@
-ALTER TABLE `budgets` ADD `created_at` integer NOT NULL;

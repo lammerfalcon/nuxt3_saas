@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { sub } from 'date-fns'
+import { z } from 'zod'
 import type { Period, Range } from '~/types'
+import type { FormSubmitEvent } from '#ui/types'
 
 const { isNotificationsSlideoverOpen } = useDashboard()
 const items = [[{
@@ -15,6 +17,25 @@ const items = [[{
 
 const range = ref<Range>({ start: sub(new Date(), { days: 14 }), end: new Date() })
 const period = ref<Period>('daily')
+
+const schema = z.object({
+  amount: z.number(),
+  description: z.string()
+})
+
+type Schema = z.output<typeof schema>
+
+const state = reactive({
+  amount: undefined,
+  description: undefined
+})
+
+async function onSubmit(event: FormSubmitEvent<Schema>) {
+  return $fetch('/api/expenses', {
+    method: 'POST',
+    body: event.data
+  })
+}
 </script>
 
 <template>
@@ -78,6 +99,32 @@ const period = ref<Period>('daily')
         />
 
         <div class="grid lg:grid-cols-2 lg:items-start gap-8 mt-8">
+          <UForm
+            :schema="schema"
+            :state="state"
+            class="space-y-4"
+            @submit="onSubmit"
+          >
+            <UFormGroup
+              label="amount"
+              name="amount"
+            >
+              <UInput v-model.number="state.amount" />
+            </UFormGroup>
+
+            <UFormGroup
+              label="description"
+              name="description"
+            >
+              <UInput
+                v-model="state.description"
+              />
+            </UFormGroup>
+
+            <UButton type="submit">
+              Submit
+            </UButton>
+          </UForm>
           <!-- ~/components/home/HomeSales.vue -->
           <HomeSales />
           <!-- ~/components/home/HomeCountries.vue -->
