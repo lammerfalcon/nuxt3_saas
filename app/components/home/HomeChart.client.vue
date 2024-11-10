@@ -117,6 +117,7 @@ const template = (record: DataRecord) => {
       <VisAxis
         type="x"
         :x="x"
+        :num-ticks="props.expenses.length / 2"
         :tick-format="xTicks"
       />
 

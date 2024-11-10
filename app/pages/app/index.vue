@@ -4,6 +4,7 @@ import { z } from 'zod'
 import type { Period, Range } from '~/types'
 import type { FormSubmitEvent } from '#ui/types'
 
+const { fetchCategories, categories, createCategory } = useCategories()
 const { isNotificationsSlideoverOpen } = useDashboard()
 const items = [[{
   label: 'New mail',
@@ -20,16 +21,31 @@ const period = ref<Period>('daily')
 
 const schema = z.object({
   amount: z.number(),
-  description: z.string().nullish()
+  description: z.string().nullish(),
+  categoryId: z.number().nullish()
 })
 
 type Schema = z.output<typeof schema>
+const selected = ref(null)
 
 const state = reactive({
   amount: undefined,
-  description: undefined
+  description: undefined,
+  categoryId: computed({
+    get: () => selected.value,
+    set: async (label) => {
+      if (typeof label === 'number') {
+        selected.value = label
+      } else {
+        const category = await createCategory(label.name)
+        categories.value?.push(category.result)
+        selected.value = category.result.id
+      }
+    }
+  })
 })
 const { data, refresh } = useFetch('/api/expenses/current-month')
+fetchCategories()
 async function onSubmit(event: FormSubmitEvent<Schema>) {
   try {
     await $fetch('/api/expenses', {
@@ -131,6 +147,22 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
               />
             </UFormGroup>
 
+            <UFormGroup
+              label="description"
+              name="description"
+            >
+              <USelectMenu
+                v-model="state.categoryId"
+                name="labels"
+                :options="categories"
+                option-attribute="name"
+                value-attribute="id"
+                searchable
+                creatable
+                show-create-option-when="always"
+                placeholder="Select category"
+              />
+            </UFormGroup>
             <UButton
               size="xl"
               class="w-full"
@@ -140,11 +172,14 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
             </UButton>
           </UForm>
           <!-- ~/components/home/HomeSales.vue -->
-          <!--          <HomeSales /> -->
+          <HomeSales />
           <!-- ~/components/home/HomeCountries.vue -->
           <!--          <HomeCountries /> -->
         </div>
         <!--        <UButton @click="useFetch('/api/seed')"> -->
+        <!--          seed -->
+        <!--        </UButton> -->
+        <!--        <UButton @click="useFetch('/api/expenses/all')"> -->
         <!--          seed -->
         <!--        </UButton> -->
       </UDashboardPanelContent>

@@ -8,6 +8,7 @@ export default defineEventHandler(async (event) => {
     userId: session.user.id,
     amount: body.amount,
     description: body.description,
+    categoryId: body.categoryId,
     createdAt: new Date()
   }).returning()
 
