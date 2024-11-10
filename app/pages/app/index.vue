@@ -131,7 +131,11 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
               />
             </UFormGroup>
 
-            <UButton type="submit">
+            <UButton
+              size="xl"
+              class="w-full"
+              type="submit"
+            >
               Submit
             </UButton>
           </UForm>

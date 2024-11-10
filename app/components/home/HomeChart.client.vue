@@ -67,7 +67,7 @@ const x = (_: DataRecord, i: number) => i
 const formatDate = (date: string): string => format(new Date(date), 'd MMM')
 
 const xTicks = (i: number) => {
-  if (i === 0 || i === props.expenses.length - 1 || !props.expenses[i]) {
+  if (i === props.expenses.length) {
     return ''
   }
   return formatDate(props.expenses[i].date)
@@ -102,7 +102,7 @@ const template = (record: DataRecord) => {
     <VisXYContainer
       :data="expenses"
       :padding="{ top: 10 }"
-      class="h-96"
+      class="h-64"
       :width="width"
     >
       <!-- Render a line for each user with a unique color -->

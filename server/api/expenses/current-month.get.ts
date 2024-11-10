@@ -1,5 +1,6 @@
 import { defineEventHandler } from 'h3'
 import { sql } from 'drizzle-orm'
+import { format, setDate, getDaysInMonth } from 'date-fns'
 
 export default defineEventHandler(async (event) => {
   const db = useDrizzle()
@@ -57,16 +58,24 @@ export default defineEventHandler(async (event) => {
     })
   })
 
+  // Determine the number of days in the current month
+  const daysInMonth = getDaysInMonth(new Date(year, month))
+
+  // Fill in missing dates up to the last day of the month with empty expenses
+  const completeExpenses = []
+  for (let day = 1; day <= daysInMonth; day++) {
+    const date = format(setDate(new Date(year, month), day), 'yyyy-MM-dd')
+    completeExpenses.push({
+      date,
+      expensesByUser: expensesByDate[date] || []
+    })
+  }
+
+  // Calculate the total of all expenses
   const totalExpenses = result.reduce((total: number, row: any) => {
     const userExpenses = JSON.parse(row.userExpenses)
     return total + userExpenses.reduce((userTotal: number, expense: any) => userTotal + expense.amount, 0)
   }, 0).toFixed(0)
 
-  // Convert to an array of objects with the desired structure
-  const expenses = Object.keys(expensesByDate).map(date => ({
-    date,
-    expensesByUser: expensesByDate[date]
-  }))
-
-  return { expenses, total: totalExpenses }
+  return { expenses: completeExpenses, total: totalExpenses }
 })
