@@ -20,7 +20,7 @@ const period = ref<Period>('daily')
 
 const schema = z.object({
   amount: z.number(),
-  description: z.string()
+  description: z.string().nullish()
 })
 
 type Schema = z.output<typeof schema>
@@ -29,12 +29,17 @@ const state = reactive({
   amount: undefined,
   description: undefined
 })
-
+const { data, refresh } = useFetch('/api/expenses/current-month')
 async function onSubmit(event: FormSubmitEvent<Schema>) {
-  return $fetch('/api/expenses', {
-    method: 'POST',
-    body: event.data
-  })
+  try {
+    await $fetch('/api/expenses', {
+      method: 'POST',
+      body: event.data
+    })
+    await refresh()
+  } catch (error) {
+    console.error(error)
+  }
 }
 </script>
 
@@ -75,29 +80,31 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
         </template>
       </UDashboardNavbar>
 
-      <UDashboardToolbar>
-        <template #left>
-          <!-- ~/components/home/HomeDateRangePicker.vue -->
-          <HomeDateRangePicker
-            v-model="range"
-            class="-ml-2.5"
-          />
+      <!--      <UDashboardToolbar> -->
+      <!--        <template #left> -->
+      <!--          &lt;!&ndash; ~/components/home/HomeDateRangePicker.vue &ndash;&gt; -->
+      <!--          <HomeDateRangePicker -->
+      <!--            v-model="range" -->
+      <!--            class="-ml-2.5" -->
+      <!--          /> -->
 
-          <!-- ~/components/home/HomePeriodSelect.vue -->
-          <HomePeriodSelect
-            v-model="period"
-            :range="range"
-          />
-        </template>
-      </UDashboardToolbar>
+      <!--          &lt;!&ndash; ~/components/home/HomePeriodSelect.vue &ndash;&gt; -->
+      <!--          <HomePeriodSelect -->
+      <!--            v-model="period" -->
+      <!--            :range="range" -->
+      <!--          /> -->
+      <!--        </template> -->
+      <!--      </UDashboardToolbar> -->
 
       <UDashboardPanelContent>
         <!-- ~/components/home/HomeChart.vue -->
         <HomeChart
+          v-if="data?.expenses"
+          :expenses="data!.expenses"
+          :total="data!.total"
           :period="period"
           :range="range"
         />
-
         <div class="grid lg:grid-cols-2 lg:items-start gap-8 mt-8">
           <UForm
             :schema="schema"
@@ -109,7 +116,10 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
               label="amount"
               name="amount"
             >
-              <UInput v-model.number="state.amount" />
+              <UInput
+                v-model.number="state.amount"
+                inputmode="numeric"
+              />
             </UFormGroup>
 
             <UFormGroup
@@ -126,10 +136,13 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
             </UButton>
           </UForm>
           <!-- ~/components/home/HomeSales.vue -->
-          <HomeSales />
+          <!--          <HomeSales /> -->
           <!-- ~/components/home/HomeCountries.vue -->
           <!--          <HomeCountries /> -->
         </div>
+        <!--        <UButton @click="useFetch('/api/seed')"> -->
+        <!--          seed -->
+        <!--        </UButton> -->
       </UDashboardPanelContent>
     </UDashboardPanel>
   </UDashboardPage>

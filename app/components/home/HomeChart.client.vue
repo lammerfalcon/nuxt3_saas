@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { eachDayOfInterval, eachWeekOfInterval, eachMonthOfInterval, format } from 'date-fns'
-import { VisXYContainer, VisLine, VisAxis, VisArea, VisCrosshair, VisTooltip } from '@unovis/vue'
+import { VisXYContainer, VisLine, VisAxis, VisCrosshair, VisTooltip } from '@unovis/vue'
 import type { Period, Range } from '~/types'
 
 const cardRef = ref<HTMLElement | null>(null)
@@ -13,57 +13,74 @@ const props = defineProps({
   range: {
     type: Object as PropType<Range>,
     required: true
+  },
+  expenses: {
+    type: Array as PropType<DataRecord[]>,
+    required: true
+  },
+  total: {
+    type: Number,
+    required: true
   }
 })
 
-type DataRecord = {
-  date: Date
+type Expense = {
+  createdAt: number
   amount: number
+  description: string
+}
+
+type UserExpense = {
+  userId: number
+  userName: string
+  expenses: Expense[]
+}
+
+type DataRecord = {
+  date: string
+  expensesByUser: UserExpense[]
 }
 
 const { width } = useElementSize(cardRef)
 
-// We use `useAsyncData` here to have same random data on the client and server
-const { data } = await useAsyncData<DataRecord[]>(async () => {
-  const dates = ({
-    daily: eachDayOfInterval,
-    weekly: eachWeekOfInterval,
-    monthly: eachMonthOfInterval
-  })[props.period](props.range)
+// Extract unique user IDs
+const userIds = computed(() => {
+  const ids = new Set<number>()
+  props.expenses.forEach((record) => {
+    record.expensesByUser.forEach(userExpense => ids.add(userExpense.userId))
+  })
+  return Array.from(ids)
+})
 
-  const min = 1000
-  const max = 10000
-
-  return dates.map(date => ({ date, amount: Math.floor(Math.random() * (max - min + 1)) + min, amount2: Math.floor(Math.random() * (max - min + 1)) + min }))
-}, {
-  watch: [() => props.period, () => props.range],
-  default: () => []
+// Generate Y-series functions for each user
+const ySeries = computed(() => {
+  return userIds.value.map(userId => (record: DataRecord) => {
+    const userExpenses = record.expensesByUser.find(userExpense => userExpense.userId === userId)
+    return userExpenses
+      ? userExpenses.expenses.reduce((sum, expense) => sum + expense.amount, 0)
+      : 0
+  })
 })
 
 const x = (_: DataRecord, i: number) => i
-const y = [(d: DataRecord) => d.amount, d => d.amount2]
 
-const total = computed(() => data.value.reduce((acc: number, { amount }) => acc + amount, 0))
-
-const formatNumber = new Intl.NumberFormat('en', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format
-
-const formatDate = (date: Date): string => {
-  return ({
-    daily: format(date, 'd MMM'),
-    weekly: format(date, 'd MMM'),
-    monthly: format(date, 'MMM yyy')
-  })[props.period]
-}
+const formatDate = (date: string): string => format(new Date(date), 'd MMM')
 
 const xTicks = (i: number) => {
-  if (i === 0 || i === data.value.length - 1 || !data.value[i]) {
+  if (i === 0 || i === props.expenses.length - 1 || !props.expenses[i]) {
     return ''
   }
-
-  return formatDate(data.value[i].date)
+  return formatDate(props.expenses[i].date)
 }
 
-const template = (d: DataRecord) => `${formatDate(d.date)}: ${formatNumber(d.amount)}`
+const template = (record: DataRecord) => {
+  const formattedDate = format(new Date(record.date), 'dd MMM')
+  const userExpenses = record.expensesByUser
+    .map(userExpense => `${userExpense.userName}: ${userExpense.expenses.reduce((sum, expense) => sum + expense.amount, 0).toFixed(1)}`)
+    .join('<br>')
+
+  return `<strong>${formattedDate}</strong><br>${userExpenses}`
+}
 </script>
 
 <template>
@@ -74,30 +91,27 @@ const template = (d: DataRecord) => `${formatDate(d.date)}: ${formatNumber(d.amo
     <template #header>
       <div>
         <p class="text-sm text-gray-500 dark:text-gray-400 font-medium mb-1">
-          Revenue
+          Total spend
         </p>
         <p class="text-3xl text-gray-900 dark:text-white font-semibold">
-          {{ formatNumber(total) }}
+          {{ total }}
         </p>
       </div>
     </template>
 
     <VisXYContainer
-      :data="data"
+      :data="expenses"
       :padding="{ top: 10 }"
       class="h-96"
       :width="width"
     >
+      <!-- Render a line for each user with a unique color -->
       <VisLine
+        v-for="(y, index) in ySeries"
+        :key="index"
         :x="x"
         :y="y"
-        color="rgb(var(--color-primary-DEFAULT))"
-      />
-      <VisArea
-        :x="x"
-        :y="y"
-        color="rgb(var(--color-primary-DEFAULT))"
-        :opacity="0.1"
+        :color="`rgb(var(--color-primary-${(index + 1) * 100}))`"
       />
 
       <VisAxis
@@ -107,7 +121,7 @@ const template = (d: DataRecord) => `${formatDate(d.date)}: ${formatNumber(d.amo
       />
 
       <VisCrosshair
-        color="rgb(var(--color-primary-DEFAULT))"
+        color="rgb(var(--color-primary-500))"
         :template="template"
       />
 
@@ -130,18 +144,16 @@ const template = (d: DataRecord) => `${formatDate(d.date)}: ${formatNumber(d.amo
   --vis-tooltip-text-color: rgb(var(--color-gray-900));
 }
 
-.dark {
-  .unovis-xy-container {
-    --vis-crosshair-line-stroke-color: rgb(var(--color-primary-400));
-    --vis-crosshair-circle-stroke-color: rgb(var(--color-gray-900));
+.dark .unovis-xy-container {
+  --vis-crosshair-line-stroke-color: rgb(var(--color-primary-400));
+  --vis-crosshair-circle-stroke-color: rgb(var(--color-gray-900));
 
-    --vis-axis-grid-color: rgb(var(--color-gray-800));
-    --vis-axis-tick-color: rgb(var(--color-gray-800));
-    --vis-axis-tick-label-color: rgb(var(--color-gray-500));
+  --vis-axis-grid-color: rgb(var(--color-gray-800));
+  --vis-axis-tick-color: rgb(var(--color-gray-800));
+  --vis-axis-tick-label-color: rgb(var(--color-gray-500));
 
-    --vis-tooltip-background-color: rgb(var(--color-gray-900));
-    --vis-tooltip-border-color: rgb(var(--color-gray-800));
-    --vis-tooltip-text-color: #fff;
-  }
+  --vis-tooltip-background-color: rgb(var(--color-gray-900));
+  --vis-tooltip-border-color: rgb(var(--color-gray-800));
+  --vis-tooltip-text-color: #fff;
 }
 </style>

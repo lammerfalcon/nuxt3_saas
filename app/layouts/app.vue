@@ -12,56 +12,62 @@ const links = [{
     text: 'Home',
     shortcuts: ['G', 'H']
   }
-}, {
-  id: 'inbox',
-  label: 'Inbox',
-  icon: 'i-heroicons-inbox',
-  to: '/app/inbox',
-  badge: '4',
-  tooltip: {
-    text: 'Inbox',
-    shortcuts: ['G', 'I']
-  }
-}, {
-  id: 'users',
-  label: 'Users',
-  icon: 'i-heroicons-user-group',
-  to: '/app/users',
-  tooltip: {
-    text: 'Users',
-    shortcuts: ['G', 'U']
-  }
-}, {
-  id: 'settings',
-  label: 'Settings',
-  to: '/app/settings',
-  icon: 'i-heroicons-cog-8-tooth',
-  children: [{
-    label: 'General',
-    to: '/app/settings',
-    exact: true
-  }, {
-    label: 'Members',
-    to: '/app/settings/members'
-  }, {
-    label: 'Notifications',
-    to: '/app/settings/notifications'
-  }],
-  tooltip: {
-    text: 'Settings',
-    shortcuts: ['G', 'S']
-  }
-}]
+}
+//   {
+//   id: 'inbox',
+//   label: 'Inbox',
+//   icon: 'i-heroicons-inbox',
+//   to: '/app/inbox',
+//   badge: '4',
+//   tooltip: {
+//     text: 'Inbox',
+//     shortcuts: ['G', 'I']
+//   }
+// },
+//   {
+//   id: 'users',
+//   label: 'Users',
+//   icon: 'i-heroicons-user-group',
+//   to: '/app/users',
+//   tooltip: {
+//     text: 'Users',
+//     shortcuts: ['G', 'U']
+//   }
+// },
+// {
+//   id: 'settings',
+//   label: 'Settings',
+//   to: '/app/settings',
+//   icon: 'i-heroicons-cog-8-tooth',
+//   children: [{
+//     label: 'General',
+//     to: '/app/settings',
+//     exact: true
+//   }, {
+//     label: 'Members',
+//     to: '/app/settings/members'
+//   }, {
+//     label: 'Notifications',
+//     to: '/app/settings/notifications'
+//   }],
+//   tooltip: {
+//     text: 'Settings',
+//     shortcuts: ['G', 'S']
+//   }
+// }
+]
 
-const footerLinks = [{
-  label: 'Invite people',
-  icon: 'i-heroicons-plus',
-  to: '/app/settings/members'
-}, {
-  label: 'Help & Support',
-  icon: 'i-heroicons-question-mark-circle',
-  click: () => isHelpSlideoverOpen.value = true
-}]
+const footerLinks = [
+//   {
+//   label: 'Invite people',
+//   icon: 'i-heroicons-plus',
+//   to: '/app/settings/members'
+// }, {
+//   label: 'Help & Support',
+//   icon: 'i-heroicons-question-mark-circle',
+//   click: () => isHelpSlideoverOpen.value = true
+// }
+]
 
 const groups = [{
   key: 'links',
@@ -101,9 +107,9 @@ const colors = computed(() => defaultColors.value.map(color => ({ ...color, acti
       </UDashboardNavbar>
 
       <UDashboardSidebar>
-        <template #header>
-          <UDashboardSearchButton />
-        </template>
+        <!--        <template #header> -->
+        <!--          <UDashboardSearchButton /> -->
+        <!--        </template> -->
 
         <UDashboardSidebarLinks :links="links" />
 

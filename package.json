@@ -31,6 +31,7 @@
     "v-calendar": "^3.1.2"
   },
   "devDependencies": {
+    "@faker-js/faker": "^9.2.0",
     "@nuxt/eslint": "^0.6.1",
     "drizzle-kit": "^0.27.1",
     "eslint": "^9.7.0",
