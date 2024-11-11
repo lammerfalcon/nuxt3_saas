@@ -3,9 +3,13 @@ import { sub } from 'date-fns'
 import { z } from 'zod'
 import type { Period, Range } from '~/types'
 import type { FormSubmitEvent } from '#ui/types'
+import { useUsers } from '~/composables/useUsers'
 
 const { fetchCategories, categories, createCategory } = useCategories()
+const { fetchUsers } = useUsers()
+
 const { isNotificationsSlideoverOpen } = useDashboard()
+const spendListsComponentRef = ref()
 const items = [[{
   label: 'New mail',
   icon: 'i-heroicons-paper-airplane',
@@ -53,6 +57,7 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
       body: event.data
     })
     await refresh()
+    await spendListsComponentRef.value.refresh()
   } catch (error) {
     console.error(error)
   }
@@ -128,51 +133,58 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
             class="space-y-4"
             @submit="onSubmit"
           >
-            <UFormGroup
-              label="amount"
-              name="amount"
-            >
-              <UInput
-                v-model.number="state.amount"
-                inputmode="numeric"
-              />
-            </UFormGroup>
+            <div class="flex flex-row gap-2 items-center justify-between">
+              <UFormGroup
+                label="amount"
+                name="amount"
+              >
+                <UInput
+                  v-model.number="state.amount"
 
+                  size="lg"
+                  inputmode="numeric"
+                />
+              </UFormGroup>
+              <UFormGroup
+                class="flex-1"
+                label="description"
+                name="description"
+              >
+                <USelectMenu
+                  v-model="state.categoryId"
+                  size="lg"
+                  name="labels"
+                  :options="categories"
+                  option-attribute="name"
+                  value-attribute="id"
+                  searchable
+                  creatable
+                  show-create-option-when="always"
+                  placeholder="Select category"
+                />
+              </UFormGroup>
+            </div>
             <UFormGroup
               label="description"
               name="description"
             >
               <UInput
                 v-model="state.description"
+
+                size="lg"
               />
             </UFormGroup>
 
-            <UFormGroup
-              label="description"
-              name="description"
-            >
-              <USelectMenu
-                v-model="state.categoryId"
-                name="labels"
-                :options="categories"
-                option-attribute="name"
-                value-attribute="id"
-                searchable
-                creatable
-                show-create-option-when="always"
-                placeholder="Select category"
-              />
-            </UFormGroup>
             <UButton
               size="xl"
-              class="w-full"
+              class="w-full items-center mx-auto flex text-center"
               type="submit"
             >
               Submit
             </UButton>
           </UForm>
           <!-- ~/components/home/HomeSales.vue -->
-          <HomeSales />
+          <HomeSales ref="spendListsComponentRef" />
           <!-- ~/components/home/HomeCountries.vue -->
           <!--          <HomeCountries /> -->
         </div>

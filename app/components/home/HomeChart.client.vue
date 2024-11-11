@@ -90,7 +90,7 @@ const template = (record: DataRecord) => {
   >
     <template #header>
       <div>
-        <p class="text-sm text-gray-500 dark:text-gray-400 font-medium mb-1">
+        <p class="text-sm text-gray-500 dark:text-gray-400 font-medium">
           Total spend
         </p>
         <p class="text-3xl text-gray-900 dark:text-white font-semibold">
@@ -102,7 +102,7 @@ const template = (record: DataRecord) => {
     <VisXYContainer
       :data="expenses"
       :padding="{ top: 10 }"
-      class="h-64"
+      class="md:h-64 h-52"
       :width="width"
     >
       <!-- Render a line for each user with a unique color -->

@@ -10,7 +10,8 @@ export default defineNuxtConfig({
     '@vueuse/nuxt',
     'nuxt-og-image',
     '@nuxthub/core',
-    'nuxt-auth-utils'
+    'nuxt-auth-utils',
+    '@vite-pwa/nuxt'
   ],
 
   $development: {

@@ -1,8 +1,11 @@
 <script setup lang="ts">
 import { useUsers } from '~/composables/useUsers'
 
-const { data } = useFetch('/api/expenses/all')
-
+const { categories } = useCategories()
+const { data, refresh } = useFetch('/api/expenses/all')
+defineExpose({
+  refresh
+})
 const formatNumber = new Intl.NumberFormat('en', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 }).format
 const { fetchUsers, users } = useUsers()
 await fetchUsers()
@@ -25,9 +28,15 @@ await fetchUsers()
           <p class="text-gray-900 dark:text-white font-medium">
             {{ users?.find(({ id }) => id === expense?.userId)?.name }}
           </p>
-          <p class="text-gray-500 dark:text-gray-400">
-            {{ new Date(expense.createdAt) }}
-          </p>
+          <div class="flex flex-row gap-2">
+
+            <p class="text-gray-500 dark:text-gray-400 text-md">
+              {{ new Date(expense.createdAt).toLocaleDateString('Ru-ru') }}
+            </p>
+            <p class="text-gray-900 dark:text-white font-medium text-md">
+              {{ categories.find(({ id }) => id === expense.categoryId).name }}
+            </p>
+          </div>
         </div>
       </div>
 
