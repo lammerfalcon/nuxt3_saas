@@ -34,7 +34,7 @@ await fetchUsers()
               {{ new Date(expense.createdAt).toLocaleDateString('Ru-ru') }}
             </p>
             <p class="text-gray-900 dark:text-white font-medium text-md">
-              {{ categories.find(({ id }) => id === expense.categoryId).name }}
+              {{ categories.find(({ id }) => id === expense.categoryId)?.name }}
             </p>
           </div>
         </div>

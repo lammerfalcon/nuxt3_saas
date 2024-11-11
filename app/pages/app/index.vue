@@ -58,6 +58,9 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
     })
     await refresh()
     await spendListsComponentRef.value.refresh()
+    state.categoryId = undefined
+    state.amount = undefined
+    state.description = undefined
   } catch (error) {
     console.error(error)
   }
