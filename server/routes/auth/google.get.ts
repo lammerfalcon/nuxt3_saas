@@ -4,8 +4,6 @@ export default defineOAuthGoogleEventHandler({
 
   async onSuccess(event, { user, tokens }) {
     const db = useDrizzle()
-    console.log(user)
-    // Upsert (insert or update on conflict) user data
     const [upsertedUser] = await db.insert(users)
       .values({
         email: user.email,
@@ -23,14 +21,12 @@ export default defineOAuthGoogleEventHandler({
       })
       .returning()
     console.log(upsertedUser)
-    // Set the user session with the up-to-date user information
     await setUserSession(event, {
       user: upsertedUser
     })
 
     return sendRedirect(event, '/app')
   },
-  // Optional, will return a json error and 401 status code by default
   onError(event, error) {
     console.error('GitHub OAuth error:', error)
     return sendRedirect(event, '/')

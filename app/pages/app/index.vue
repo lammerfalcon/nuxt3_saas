@@ -31,6 +31,7 @@ const schema = z.object({
 
 type Schema = z.output<typeof schema>
 const selected = ref(null)
+const categoryInputQuery = ref(null)
 
 const state = reactive({
   amount: undefined,
@@ -38,12 +39,14 @@ const state = reactive({
   categoryId: computed({
     get: () => selected.value,
     set: async (label) => {
+      if (!label) return
       if (typeof label === 'number') {
         selected.value = label
       } else {
         const category = await createCategory(label.name)
         categories.value?.push(category.result)
         selected.value = category.result.id
+        categoryInputQuery.value = ''
       }
     }
   })
@@ -136,25 +139,26 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
             class="space-y-4"
             @submit="onSubmit"
           >
-            <div class="flex flex-row gap-2 items-center justify-between">
+            <div class="flex flex-row gap-2 items-start justify-between">
               <UFormGroup
-                label="amount"
+                label="Amount"
                 name="amount"
               >
                 <UInput
                   v-model.number="state.amount"
-
+                  type="number"
                   size="lg"
                   inputmode="numeric"
                 />
               </UFormGroup>
               <UFormGroup
                 class="flex-1"
-                label="description"
-                name="description"
+                label="Category"
+                name="categoryId"
               >
                 <USelectMenu
                   v-model="state.categoryId"
+                  :query="categoryInputQuery"
                   size="lg"
                   name="labels"
                   :options="categories"
@@ -168,7 +172,7 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
               </UFormGroup>
             </div>
             <UFormGroup
-              label="description"
+              label="Description"
               name="description"
             >
               <UInput

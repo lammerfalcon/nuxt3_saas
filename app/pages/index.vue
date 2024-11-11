@@ -1,5 +1,12 @@
 <script setup lang="ts">
-
+const { loggedIn } = useUserSession()
+watch(() => loggedIn.value, (loggedIn) => {
+  if (loggedIn) {
+    navigateTo('/app')
+  } else {
+    navigateTo('/login')
+  }
+})
 </script>
 
 <template>
