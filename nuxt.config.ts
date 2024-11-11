@@ -23,7 +23,6 @@ export default defineNuxtConfig({
   devtools: {
     enabled: true
   },
-
   colorMode: {
     disableTransition: true
   },
@@ -70,5 +69,30 @@ export default defineNuxtConfig({
     cloudflare: {
       baseURL: 'https://nuxt3-saas.nuxt.dev/'
     }
+  },
+  pwa: {
+    manifest: {
+      name: '123',
+      short_name: '123',
+      theme_color: '#8a8a5e',
+      description: '123',
+      icons: [
+        {
+          src: 'logo.webp',
+          sizes: '150x150',
+          type: 'image/png'
+        }
+      ]
+
+    },
+    workbox: {
+      navigateFallback: '/'
+
+    },
+    devOptions: {
+      enabled: true,
+      type: 'module'
+    }
+
   }
 })
