@@ -168,6 +168,8 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
                   option-attribute="name"
                   value-attribute="id"
                   :popper="{ placement: 'top' }"
+                  searchable
+                  searchable-lazy
                   creatable
                   show-create-option-when="always"
                   placeholder="Select category"
