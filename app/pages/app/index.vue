@@ -52,6 +52,8 @@ const state = reactive({
   })
 })
 const { data, refresh } = useFetch('/api/expenses/current-month')
+const categoryResponse = useFetch('/api/expenses/by-category')
+const categoryData = computed(() => categoryResponse.data.value)
 fetchCategories()
 async function onSubmit(event: FormSubmitEvent<Schema>) {
   try {
@@ -128,6 +130,7 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
         <HomeChart
           v-if="data?.expenses"
           :expenses="data!.expenses"
+          :category-data="categoryData"
           :total="data!.total"
           :period="period"
           :range="range"
@@ -164,7 +167,7 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
                   :options="categories"
                   option-attribute="name"
                   value-attribute="id"
-                  searchable
+                  :popper="{ placement: 'top' }"
                   creatable
                   show-create-option-when="always"
                   placeholder="Select category"

@@ -27,10 +27,6 @@ export default defineNuxtConfig({
     disableTransition: true
   },
 
-  ui: {
-    icons: ['heroicons', 'simple-icons']
-  },
-
   runtimeConfig: {
     oauth: {
       google: {
@@ -87,7 +83,6 @@ export default defineNuxtConfig({
     },
     workbox: {
       navigateFallback: '/'
-
     },
     devOptions: {
       enabled: true,

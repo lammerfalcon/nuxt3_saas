@@ -23,6 +23,8 @@ export default defineOAuthGoogleEventHandler({
     console.log(upsertedUser)
     await setUserSession(event, {
       user: upsertedUser
+    }, {
+      maxAge: 60 * 60 * 24 * 30
     })
 
     return sendRedirect(event, '/app')

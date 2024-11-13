@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { eachDayOfInterval, eachWeekOfInterval, eachMonthOfInterval, format } from 'date-fns'
-import { VisXYContainer, VisLine, VisAxis, VisCrosshair, VisTooltip } from '@unovis/vue'
+import { VisXYContainer, VisLine, VisAxis, VisCrosshair, VisTooltip, VisSingleContainer, VisDonut } from '@unovis/vue'
+import { Donut } from '@unovis/ts'
 import type { Period, Range } from '~/types'
 
 const cardRef = ref<HTMLElement | null>(null)
@@ -18,8 +19,12 @@ const props = defineProps({
     type: Array as PropType<DataRecord[]>,
     required: true
   },
+  categoryData: {
+    type: Array,
+    required: true
+  },
   total: {
-    type: Number,
+    type: String,
     required: true
   }
 })
@@ -81,6 +86,14 @@ const template = (record: DataRecord) => {
 
   return `<strong>${formattedDate}</strong><br>${userExpenses}`
 }
+const value = (d: { totalAmount: number }) => d.totalAmount
+
+// const triggers = {
+//   [Donut.selectors.segment]: (d: { categoryName: string, totalAmount: number }) => {
+//     return `${d.categoryName}: $${d.totalAmount.toFixed(2)}`
+//   }
+// }
+const triggers = { [Donut.selectors.segment]: d => `${d.data.categoryName}: $${d.data.totalAmount.toFixed(2)}` }
 </script>
 
 <template>
@@ -98,41 +111,48 @@ const template = (record: DataRecord) => {
         </p>
       </div>
     </template>
-
-    <VisXYContainer
-      :data="expenses"
-      :padding="{ top: 10 }"
-      class="md:h-64 h-52"
-      :width="width"
-    >
-      <!-- Render a line for each user with a unique color -->
-      <VisLine
-        v-for="(y, index) in ySeries"
-        :key="index"
-        :x="x"
-        :y="y"
-        :color="`rgb(var(--color-primary-${(index + 1) * 100}))`"
+    <VisSingleContainer :data="categoryData?.expenses">
+      <VisTooltip :triggers="triggers" />
+      <VisDonut
+        :arc-width="50"
+        :radius="120"
+        :value="value"
       />
+    </VisSingleContainer>
+    <!--    <VisXYContainer -->
+    <!--      :data="expenses" -->
+    <!--      :padding="{ top: 10 }" -->
+    <!--      class="md:h-64 h-52" -->
+    <!--      :width="width" -->
+    <!--    > -->
+    <!--      &lt;!&ndash; Render a line for each user with a unique color &ndash;&gt; -->
+    <!--      <VisLine -->
+    <!--        v-for="(y, index) in ySeries" -->
+    <!--        :key="index" -->
+    <!--        :x="x" -->
+    <!--        :y="y" -->
+    <!--        :color="`rgb(var(&#45;&#45;color-primary-${(index + 1) * 100}))`" -->
+    <!--      /> -->
 
-      <VisAxis
-        type="x"
-        :x="x"
-        :num-ticks="props.expenses.length / 2"
-        :tick-format="xTicks"
-      />
+    <!--      <VisAxis -->
+    <!--        type="x" -->
+    <!--        :x="x" -->
+    <!--        :num-ticks="props.expenses.length / 2" -->
+    <!--        :tick-format="xTicks" -->
+    <!--      /> -->
 
-      <VisCrosshair
-        color="rgb(var(--color-primary-500))"
-        :template="template"
-      />
+    <!--      <VisCrosshair -->
+    <!--        color="rgb(var(&#45;&#45;color-primary-500))" -->
+    <!--        :template="template" -->
+    <!--      /> -->
 
-      <VisTooltip />
-    </VisXYContainer>
+    <!--      <VisTooltip /> -->
+    <!--    </VisXYContainer> -->
   </UDashboardCard>
 </template>
 
 <style scoped>
-.unovis-xy-container {
+.unovis-single-container {
   --vis-crosshair-line-stroke-color: rgb(var(--color-primary-500));
   --vis-crosshair-circle-stroke-color: #fff;
 
@@ -143,9 +163,10 @@ const template = (record: DataRecord) => {
   --vis-tooltip-background-color: #fff;
   --vis-tooltip-border-color: rgb(var(--color-gray-200));
   --vis-tooltip-text-color: rgb(var(--color-gray-900));
+
 }
 
-.dark .unovis-xy-container {
+.dark .unovis-single-container {
   --vis-crosshair-line-stroke-color: rgb(var(--color-primary-400));
   --vis-crosshair-circle-stroke-color: rgb(var(--color-gray-900));
 
