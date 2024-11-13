@@ -68,10 +68,10 @@ export default defineNuxtConfig({
   },
   pwa: {
     manifest: {
-      name: '123',
-      short_name: '123',
+      name: 'spency',
+      short_name: 'spency',
       theme_color: '#8a8a5e',
-      description: '123',
+      description: 'spency',
       icons: [
         {
           src: 'logo.webp',
