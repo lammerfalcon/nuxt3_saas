@@ -62,6 +62,7 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
       body: event.data
     })
     await refresh()
+    await categoryResponse.refresh()
     await spendListsComponentRef.value.refresh()
     selected.value = null
     state.amount = undefined
@@ -169,7 +170,6 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
                   value-attribute="id"
                   :popper="{ placement: 'top' }"
                   searchable
-                  searchable-lazy
                   creatable
                   show-create-option-when="always"
                   placeholder="Select category"

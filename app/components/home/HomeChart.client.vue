@@ -1,26 +1,13 @@
 <script setup lang="ts">
-import { eachDayOfInterval, eachWeekOfInterval, eachMonthOfInterval, format } from 'date-fns'
-import { VisXYContainer, VisLine, VisAxis, VisCrosshair, VisTooltip, VisSingleContainer, VisDonut } from '@unovis/vue'
+import { ref, computed } from 'vue'
+import { VisSingleContainer, VisDonut, VisTooltip } from '@unovis/vue'
 import { Donut } from '@unovis/ts'
-import type { Period, Range } from '~/types'
 
 const cardRef = ref<HTMLElement | null>(null)
 
 const props = defineProps({
-  period: {
-    type: String as PropType<Period>,
-    required: true
-  },
-  range: {
-    type: Object as PropType<Range>,
-    required: true
-  },
-  expenses: {
-    type: Array as PropType<DataRecord[]>,
-    required: true
-  },
   categoryData: {
-    type: Array,
+    type: Object,
     required: true
   },
   total: {
@@ -29,71 +16,35 @@ const props = defineProps({
   }
 })
 
-type Expense = {
-  createdAt: number
-  amount: number
-  description: string
+const totalAmount = computed(() =>
+  props.categoryData?.expenses.reduce((sum, d) => sum + d.totalAmount, 0)
+)
+
+// Функция для генерации цветов
+const generateColor = (index: number, total: number) => {
+  const hue = (index / total) * 360
+  return `hsl(${hue}, 65%, 60%)`
 }
 
-type UserExpense = {
-  userId: number
-  userName: string
-  expenses: Expense[]
-}
-
-type DataRecord = {
-  date: string
-  expensesByUser: UserExpense[]
-}
-
-const { width } = useElementSize(cardRef)
-
-// Extract unique user IDs
-const userIds = computed(() => {
-  const ids = new Set<number>()
-  props.expenses.forEach((record) => {
-    record.expensesByUser.forEach(userExpense => ids.add(userExpense.userId))
+const categoriesWithDetails = computed(() =>
+  props.categoryData?.expenses.map((d, i) => {
+    const percentage = (d.totalAmount / totalAmount.value) * 100
+    const color = generateColor(i, props.categoryData?.expenses.length)
+    return {
+      ...d,
+      percentage,
+      color
+    }
   })
-  return Array.from(ids)
-})
+)
 
-// Generate Y-series functions for each user
-const ySeries = computed(() => {
-  return userIds.value.map(userId => (record: DataRecord) => {
-    const userExpenses = record.expensesByUser.find(userExpense => userExpense.userId === userId)
-    return userExpenses
-      ? userExpenses.expenses.reduce((sum, expense) => sum + expense.amount, 0)
-      : 0
-  })
-})
+const value = d => d.totalAmount
+const color = d => d.color
 
-const x = (_: DataRecord, i: number) => i
-
-const formatDate = (date: string): string => format(new Date(date), 'd MMM')
-
-const xTicks = (i: number) => {
-  if (i === props.expenses.length) {
-    return ''
-  }
-  return formatDate(props.expenses[i].date)
+const triggers = {
+  [Donut.selectors.segment]: d =>
+    `${d.data.categoryName}: $${d.data.totalAmount.toFixed(2)}`
 }
-
-const template = (record: DataRecord) => {
-  const formattedDate = format(new Date(record.date), 'dd MMM')
-  const userExpenses = record.expensesByUser
-    .map(userExpense => `${userExpense.userName}: ${userExpense.expenses.reduce((sum, expense) => sum + expense.amount, 0).toFixed(1)}`)
-    .join('<br>')
-
-  return `<strong>${formattedDate}</strong><br>${userExpenses}`
-}
-const value = (d: { totalAmount: number }) => d.totalAmount
-
-// const triggers = {
-//   [Donut.selectors.segment]: (d: { categoryName: string, totalAmount: number }) => {
-//     return `${d.categoryName}: $${d.totalAmount.toFixed(2)}`
-//   }
-// }
-const triggers = { [Donut.selectors.segment]: d => `${d.data.categoryName}: $${d.data.totalAmount.toFixed(2)}` }
 </script>
 
 <template>
@@ -102,52 +53,45 @@ const triggers = { [Donut.selectors.segment]: d => `${d.data.categoryName}: $${d
     :ui="{ body: { padding: '!pb-3 !px-0' } as any }"
   >
     <template #header>
-      <div>
-        <p class="text-sm text-gray-500 dark:text-gray-400 font-medium">
-          Total spend
-        </p>
-        <p class="text-3xl text-gray-900 dark:text-white font-semibold">
-          {{ total }}
-        </p>
+      <div class="flex flex-row justify-between items-start w-full">
+        <div>
+          <p class="text-sm text-gray-500 dark:text-gray-400 font-medium">
+            Total spend
+          </p>
+          <p class="text-3xl text-gray-900 dark:text-white font-semibold">
+            {{ total }}
+          </p>
+        </div>
       </div>
     </template>
-    <VisSingleContainer :data="categoryData?.expenses">
+    <VisSingleContainer :data="categoriesWithDetails">
       <VisTooltip :triggers="triggers" />
       <VisDonut
+        :pad-angle="0.005"
+        :show-empty-segments="true"
         :arc-width="50"
         :radius="120"
         :value="value"
+        :color="color"
       />
     </VisSingleContainer>
-    <!--    <VisXYContainer -->
-    <!--      :data="expenses" -->
-    <!--      :padding="{ top: 10 }" -->
-    <!--      class="md:h-64 h-52" -->
-    <!--      :width="width" -->
-    <!--    > -->
-    <!--      &lt;!&ndash; Render a line for each user with a unique color &ndash;&gt; -->
-    <!--      <VisLine -->
-    <!--        v-for="(y, index) in ySeries" -->
-    <!--        :key="index" -->
-    <!--        :x="x" -->
-    <!--        :y="y" -->
-    <!--        :color="`rgb(var(&#45;&#45;color-primary-${(index + 1) * 100}))`" -->
-    <!--      /> -->
-
-    <!--      <VisAxis -->
-    <!--        type="x" -->
-    <!--        :x="x" -->
-    <!--        :num-ticks="props.expenses.length / 2" -->
-    <!--        :tick-format="xTicks" -->
-    <!--      /> -->
-
-    <!--      <VisCrosshair -->
-    <!--        color="rgb(var(&#45;&#45;color-primary-500))" -->
-    <!--        :template="template" -->
-    <!--      /> -->
-
-    <!--      <VisTooltip /> -->
-    <!--    </VisXYContainer> -->
+    <template #footer>
+      <div class="flex flex-wrap gap-x-2 items-center">
+        <div
+          v-for="(data, index) in categoriesWithDetails"
+          :key="data.categoryName"
+          class="flex items-center mt-2 text-xs"
+        >
+          <div
+            :style="{ backgroundColor: data.color }"
+            class="w-4 h-4 mr-2"
+          />
+          <div>
+            {{ data.categoryName }} - {{ data.percentage.toFixed(0) }}%
+          </div>
+        </div>
+      </div>
+    </template>
   </UDashboardCard>
 </template>
 
