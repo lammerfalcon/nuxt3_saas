@@ -29,27 +29,40 @@ const schema = z.object({
   categoryId: z.number().nullish()
 })
 
+const categoryFormSchema = z.object({
+  name: z.string()
+})
+
 type Schema = z.output<typeof schema>
 const selected = ref(null)
-const categoryInputQuery = ref(null)
+const categoryInputQuery = ref('')
 
+// computed({
+//   get: () => selected.value,
+//   set: async (label) => {
+//     if (!label) return
+//     if (typeof label === 'number') {
+//       selected.value = label
+//     } else {
+//       const category = await createCategory(label.name)
+//       categories.value?.push(category.result)
+//       selected.value = category.result.id
+//       categoryInputQuery.value = ''
+//     }
+//   }
+// })
+async function createNewCategory() {
+  if (!categoryInputQuery.value) return
+  const category = await createCategory(categoryInputQuery.value)
+  categories.value?.push(category.result)
+  state.categoryId = category.result.id
+  categoryInputQuery.value = ''
+  isCreating.value = false
+}
 const state = reactive({
   amount: undefined,
   description: undefined,
-  categoryId: computed({
-    get: () => selected.value,
-    set: async (label) => {
-      if (!label) return
-      if (typeof label === 'number') {
-        selected.value = label
-      } else {
-        const category = await createCategory(label.name)
-        categories.value?.push(category.result)
-        selected.value = category.result.id
-        categoryInputQuery.value = ''
-      }
-    }
-  })
+  categoryId: undefined
 })
 const { data, refresh } = useFetch('/api/expenses/current-month')
 const categoryResponse = useFetch('/api/expenses/by-category')
@@ -67,10 +80,12 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
     selected.value = null
     state.amount = undefined
     state.description = undefined
+    state.categoryId = undefined
   } catch (error) {
     console.error(error)
   }
 }
+const isCreating = ref(false)
 </script>
 
 <template>
@@ -136,11 +151,39 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
           :period="period"
           :range="range"
         />
+        <UModal v-model="isCreating">
+          <UCard>
+            <template #header>
+              Create new category
+            </template>
+            <UForm
+              class="flex flex-col gap-2"
+              @submit="createNewCategory"
+            >
+              <UFormGroup
+                label="Category"
+                name="name"
+              >
+                <UInput
+                  v-model="categoryInputQuery"
+                  size="lg"
+                />
+              </UFormGroup>
+              <UButton
+                class="w-full flex items-center justify-center"
+                type="submit"
+              >
+                Create
+              </UButton>
+            </UForm>
+          </UCard>
+        </UModal>
         <div class="grid lg:grid-cols-2 lg:items-start gap-8 mt-8">
           <UForm
             :schema="schema"
             :state="state"
             class="space-y-4"
+            :validate-on="['submit']"
             @submit="onSubmit"
           >
             <div class="flex flex-row gap-2 items-start justify-between">
@@ -157,20 +200,25 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
               </UFormGroup>
               <UFormGroup
                 class="flex-1"
-                label="Category"
                 name="categoryId"
+                label="Category"
               >
+                <template #hint>
+                  <UButton
+                    size="icon"
+                    variant="soft"
+                    icon="i-heroicons-plus"
+                    @click="isCreating = !isCreating"
+                  />
+                </template>
                 <USelectMenu
                   v-model="state.categoryId"
-                  :query="categoryInputQuery"
                   size="lg"
                   name="labels"
                   :options="categories"
                   option-attribute="name"
                   value-attribute="id"
                   :popper="{ placement: 'top' }"
-                  searchable
-                  creatable
                   show-create-option-when="always"
                   placeholder="Select category"
                 />
