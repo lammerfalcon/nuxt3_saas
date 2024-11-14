@@ -92,9 +92,9 @@ const completeButtonRef = ref(null)
 const createCategoryInput = ref(null)
 function openCreateCategoryModal() {
   isCreating.value = true
-  // setTimeout(() => {
-  //   createCategoryInput.value?.input.focus()
-  // }, 200)
+  setTimeout(() => {
+    createCategoryInput.value?.input.focus()
+  }, 200)
 }
 </script>
 
