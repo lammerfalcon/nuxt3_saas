@@ -29,13 +29,12 @@ const schema = z.object({
   categoryId: z.number().nullish()
 })
 
-const categoryFormSchema = z.object({
+const categorySchema = z.object({
   name: z.string()
 })
-
+type categoryFormSchema = z.output<typeof categorySchema>
 type Schema = z.output<typeof schema>
 const selected = ref(null)
-const categoryInputQuery = ref('')
 
 // computed({
 //   get: () => selected.value,
@@ -51,18 +50,21 @@ const categoryInputQuery = ref('')
 //     }
 //   }
 // })
-async function createNewCategory() {
-  if (!categoryInputQuery.value) return
-  const category = await createCategory(categoryInputQuery.value)
+async function createNewCategory(event: FormSubmitEvent<categoryFormSchema>) {
+  if (!event.data.name) return
+  const category = await createCategory(event.data.name)
   categories.value?.push(category.result)
   state.categoryId = category.result.id
-  categoryInputQuery.value = ''
+  categoryFormState.name = undefined
   isCreating.value = false
 }
 const state = reactive({
   amount: undefined,
   description: undefined,
   categoryId: undefined
+})
+const categoryFormState = reactive({
+  name: undefined
 })
 const { data, refresh } = useFetch('/api/expenses/current-month')
 const categoryResponse = useFetch('/api/expenses/by-category')
@@ -168,9 +170,10 @@ function openCreateCategoryModal() {
               Create new category
             </template>
             <UForm
-              :state="categoryInputQuery"
+              :state="categoryFormState"
+              :schema="categorySchema"
               class="flex flex-col gap-2"
-              @submit="createCategory"
+              @submit="createNewCategory"
             >
               <UFormGroup
                 label="Category"
@@ -178,7 +181,7 @@ function openCreateCategoryModal() {
               >
                 <UInput
                   ref="createCategoryInput"
-                  v-model="categoryInputQuery"
+                  v-model="categoryFormState.name"
                   size="lg"
                 />
               </UFormGroup>
