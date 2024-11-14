@@ -88,11 +88,11 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
 const isCreating = ref(false)
 const completeButtonRef = ref(null)
 const createCategoryInput = ref(null)
-async function openCreateCategoryModal() {
+function openCreateCategoryModal() {
   isCreating.value = true
-  await nextTick(async () => {
-    await createCategoryInput.value?.input.focus()
-  })
+  // setTimeout(() => {
+  //   createCategoryInput.value?.input.focus()
+  // }, 200)
 }
 </script>
 
