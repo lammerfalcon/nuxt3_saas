@@ -166,6 +166,7 @@ const isCreating = ref(false)
               >
                 <UInput
                   v-model="categoryInputQuery"
+                  :autofocus="false"
                   size="lg"
                 />
               </UFormGroup>
