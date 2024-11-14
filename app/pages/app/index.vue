@@ -86,6 +86,14 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
   }
 }
 const isCreating = ref(false)
+const completeButtonRef = ref(null)
+const createCategoryInput = ref(null)
+async function openCreateCategoryModal() {
+  isCreating.value = true
+  await nextTick(async () => {
+    await createCategoryInput.value?.input.focus()
+  })
+}
 </script>
 
 <template>
@@ -151,26 +159,31 @@ const isCreating = ref(false)
           :period="period"
           :range="range"
         />
-        <UModal v-model="isCreating">
+        <UModal
+          v-model="isCreating"
+          :initial-focus="completeButtonRef"
+        >
           <UCard>
             <template #header>
               Create new category
             </template>
             <UForm
+              :state="categoryInputQuery"
               class="flex flex-col gap-2"
-              @submit="createNewCategory"
+              @submit="createCategory"
             >
               <UFormGroup
                 label="Category"
                 name="name"
               >
                 <UInput
+                  ref="createCategoryInput"
                   v-model="categoryInputQuery"
-                  :autofocus="false"
                   size="lg"
                 />
               </UFormGroup>
               <UButton
+                ref="completeButtonRef"
                 class="w-full flex items-center justify-center"
                 type="submit"
               >
@@ -205,12 +218,9 @@ const isCreating = ref(false)
                 label="Category"
               >
                 <template #hint>
-                  <UButton
-                    size="icon"
-                    variant="soft"
-                    icon="i-heroicons-plus"
-                    @click="isCreating = !isCreating"
-                  />
+                  <div @click="openCreateCategoryModal">
+                    Add new
+                  </div>
                 </template>
                 <USelectMenu
                   v-model="state.categoryId"
