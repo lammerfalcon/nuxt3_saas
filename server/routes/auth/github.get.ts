@@ -28,7 +28,7 @@ export default defineOAuthGitHubEventHandler({
       maxAge: 60 * 60 * 24 * 30
     })
 
-    return sendRedirect(event, '/app')
+    return sendRedirect(event, '/app/ai')
   },
   onError(event, error) {
     console.error('GitHub OAuth error:', error)

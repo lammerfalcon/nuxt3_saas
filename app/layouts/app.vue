@@ -3,16 +3,27 @@ const route = useRoute()
 const appConfig = useAppConfig()
 const { isHelpSlideoverOpen } = useDashboard()
 
-const links = [{
-  id: 'home',
-  label: 'Home',
-  icon: 'i-heroicons-home',
-  to: '/app',
-  tooltip: {
-    text: 'Home',
-    shortcuts: ['G', 'H']
+const links = [
+  {
+    id: 'home',
+    label: 'Home',
+    icon: 'i-heroicons-home',
+    to: '/app',
+    tooltip: {
+      text: 'Home',
+      shortcuts: ['G', 'H']
+    }
+  },
+  {
+    id: 'ai',
+    label: 'Home',
+    icon: 'i-heroicons-home',
+    to: '/app/ai',
+    tooltip: {
+      text: 'ai',
+      shortcuts: ['a', 'i']
+    }
   }
-}
 //   {
 //   id: 'inbox',
 //   label: 'Inbox',

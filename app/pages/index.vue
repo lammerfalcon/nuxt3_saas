@@ -2,7 +2,7 @@
 const { loggedIn } = useUserSession()
 watch(() => loggedIn.value, (loggedIn) => {
   if (loggedIn) {
-    navigateTo('/app')
+    navigateTo('/app/ai')
   } else {
     navigateTo('/login')
   }

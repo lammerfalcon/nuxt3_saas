@@ -2,13 +2,13 @@
   <form @submit.prevent="submitForm">
     <div>
       <label for="csvFile">Upload CSV File:</label>
-      <UInput
+      <input
         id="csvFile"
         type="file"
         accept=".csv"
         required
         @change="handleFileChange"
-      />
+      >
     </div>
     <div>
       <label for="prompt">Enter Filter Prompt:</label>

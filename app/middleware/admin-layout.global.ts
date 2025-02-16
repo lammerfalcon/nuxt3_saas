@@ -1,10 +1,10 @@
 export default defineNuxtRouteMiddleware((to) => {
   const { loggedIn } = useUserSession()
   if (loggedIn.value && to.path.startsWith('/login')) {
-    return navigateTo('/app')
+    return navigateTo('/app/ai')
   }
   if (loggedIn.value && to.path === '/') {
-    return navigateTo('/app')
+    return navigateTo('/app/ai')
   }
   if (!loggedIn.value && to.path === '/') {
     return navigateTo('/login')
