@@ -10,8 +10,8 @@ export default defineEventHandler(async (event) => {
   const month = now.getMonth()
 
   // Define the start and end timestamps for the current month
-  const firstDayTimestamp = Math.floor(new Date(year, month, 1).getTime() / 1000) // in seconds
-  const lastDayTimestamp = Math.floor(new Date(year, month + 1, 0, 23, 59, 59, 999).getTime() / 1000) // in seconds
+  const firstDayTimestamp = Math.floor(new Date(2021, 0, 1).getTime() / 1000) // in seconds
+  const lastDayTimestamp = Math.floor(new Date(2024, 12, 0, 23, 59, 59, 999).getTime() / 1000) // in seconds
 
   // Use a raw SQL query to get the total amount per category
   const result = await db.all(

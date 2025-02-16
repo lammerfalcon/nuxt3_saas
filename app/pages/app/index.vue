@@ -4,6 +4,7 @@ import { z } from 'zod'
 import type { Period, Range } from '~/types'
 import type { FormSubmitEvent } from '#ui/types'
 import { useUsers } from '~/composables/useUsers'
+import UploadCsv from '~/components/uploadCsv.vue'
 
 const { fetchCategories, categories, createCategory } = useCategories()
 const { fetchUsers } = useUsers()
@@ -66,7 +67,13 @@ const state = reactive({
 const categoryFormState = reactive({
   name: undefined
 })
-const { data, refresh } = useFetch('/api/expenses/current-month')
+const { data, refresh } = useFetch('/api/expenses/current-month', {
+  query: {
+    start: range.value.start.toISOString(),
+    end: range.value.end.toISOString()
+  },
+  watch: [range]
+})
 const categoryResponse = useFetch('/api/expenses/by-category')
 const categoryData = computed(() => categoryResponse.data.value)
 fetchCategories()
@@ -99,8 +106,14 @@ function openCreateCategoryModal() {
 </script>
 
 <template>
+  <UPricingToggle
+    v-model="isYearly"
+    class="max-w-xs"
+  />
+
   <UDashboardPage>
     <UDashboardPanel grow>
+      <UploadCsv />
       <UDashboardNavbar title="Home">
         <template #right>
           <UTooltip
@@ -135,22 +148,19 @@ function openCreateCategoryModal() {
         </template>
       </UDashboardNavbar>
 
-      <!--      <UDashboardToolbar> -->
-      <!--        <template #left> -->
-      <!--          &lt;!&ndash; ~/components/home/HomeDateRangePicker.vue &ndash;&gt; -->
-      <!--          <HomeDateRangePicker -->
-      <!--            v-model="range" -->
-      <!--            class="-ml-2.5" -->
-      <!--          /> -->
-
-      <!--          &lt;!&ndash; ~/components/home/HomePeriodSelect.vue &ndash;&gt; -->
-      <!--          <HomePeriodSelect -->
-      <!--            v-model="period" -->
-      <!--            :range="range" -->
-      <!--          /> -->
-      <!--        </template> -->
-      <!--      </UDashboardToolbar> -->
-
+      <UDashboardToolbar>
+        <template #left>
+          <!-- ~/components/home/HomeDateRangePicker.vue -->
+          <HomeDateRangePicker
+            v-model="range"
+          />
+          <!-- ~/components/home/HomePeriodSelect.vue -->
+          <!--          <HomePeriodSelect -->
+          <!--            v-model="period" -->
+          <!--            :range="range" -->
+          <!--          /> -->
+        </template>
+      </UDashboardToolbar>
       <UDashboardPanelContent>
         <!-- ~/components/home/HomeChart.vue -->
         <HomeChart

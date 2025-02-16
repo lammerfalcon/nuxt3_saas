@@ -21,3 +21,16 @@ export const expenses = sqliteTable('expenses', {
   createdAt: integer('created_at', { mode: 'timestamp' }).notNull(),
   description: text('description')
 })
+
+export const csvFiles = sqliteTable('csv_files', {
+  id: integer('id').primaryKey({ autoIncrement: true }),
+  userId: integer('user_id').notNull(), // ID пользователя, загрузившего файл
+  fileName: text('file_name').notNull(), // Имя файла
+  createdAt: integer('created_at', { mode: 'timestamp' }).notNull()
+})
+
+export const dataRows = sqliteTable('data_rows', {
+  id: integer('id').primaryKey({ autoIncrement: true }),
+  fileId: integer('file_id').notNull(), // Ссылка на CSV файл
+  rowData: text('row_data').notNull() // Данные строки в формате JSON
+})

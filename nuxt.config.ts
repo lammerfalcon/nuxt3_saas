@@ -16,7 +16,7 @@ export default defineNuxtConfig({
 
   $development: {
     hub: {
-      remote: false
+      remote: true
     }
   },
 
@@ -49,7 +49,8 @@ export default defineNuxtConfig({
 
   hub: {
     database: true,
-    blob: true
+    blob: true,
+    ai: true
   },
 
   eslint: {
